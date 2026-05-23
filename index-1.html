@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodStop — Delicious Fast Food</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #C0392B; --red-dark: #962d22; --yellow: #F5A623;
+    --yellow-light: #FDE3A7; --cream: #FDF6EE; --text: #222; --white: #fff;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 68px; background: var(--white);
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 16px rgba(0,0,0,.08);
+  }
+  .logo { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: var(--red); font-weight: 700; text-decoration: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text); font-weight: 700; font-size: .93rem;
+    position: relative; transition: color .25s; padding: 4px 0;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -3px; left: 0;
+    width: 0; height: 2px; background: var(--red); transition: width .3s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--red); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--red); color: var(--white) !important; padding: 8px 22px !important; border-radius: 50px; transition: background .3s !important; }
+  .nav-cta:hover { background: var(--red-dark) !important; }
+  .nav-cta::after { display: none !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 3px; background: var(--text); border-radius: 2px; transition: all .3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* HERO */
+  .hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; min-height: calc(100vh - 68px);
+    padding: 60px 5%; background: var(--cream); position: relative; overflow: hidden;
+  }
+  .blob { position: absolute; border-radius: 50%; z-index: 0; }
+  .blob-1 { width: 340px; height: 160px; background: var(--yellow); bottom: 40px; left: 60px; border-radius: 80px 80px 120px 120px / 80px 80px 120px 120px; animation: blobPulse 4s ease-in-out infinite; }
+  .blob-2 { width: 200px; height: 200px; background: var(--yellow-light); top: 30px; right: 15%; border-radius: 50%; animation: blobPulse 5s ease-in-out infinite reverse; }
+  @keyframes blobPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .shape { position: absolute; z-index: 1; pointer-events: none; }
+  .star-red { width: 28px; height: 28px; fill: var(--red); top: 18%; left: 46%; animation: spin 8s linear infinite; }
+  .star-yellow { width: 18px; height: 18px; fill: var(--yellow); top: 60%; left: 42%; animation: spin 6s linear infinite reverse; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .dot-red { width: 14px; height: 14px; background: var(--red); border-radius: 50%; top: 35%; left: 35%; animation: bounce 2.5s ease-in-out infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .chili { position: absolute; z-index: 2; animation: floatY 3s ease-in-out infinite; }
+  .chili-1 { width: 80px; bottom: 120px; right: 8%; transform: rotate(-30deg); }
+  .chili-2 { width: 55px; top: 22%; right: 12%; transform: rotate(20deg); animation-delay: 1s; }
+  .leaf { position: absolute; width: 50px; bottom: 180px; left: 46%; z-index: 2; animation: floatY 4s ease-in-out infinite; animation-delay: .5s; }
+  @keyframes floatY { 0%,100% { transform: translateY(0) rotate(-30deg); } 50% { transform: translateY(-14px) rotate(-25deg); } }
+  .hero-text { position: relative; z-index: 5; animation: fadeSlideUp .8s ease both; }
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-text h1 { line-height: 1; margin-bottom: 12px; }
+  .hero-text h1 .script { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 4vw, 3rem); color: var(--text); display: block; }
+  .hero-text h1 .block { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 7vw, 5.5rem); color: var(--red); display: block; letter-spacing: 2px; line-height: 1; }
+  .tagline { font-size: 1.1rem; font-weight: 600; color: #555; margin-bottom: 14px; }
+  .desc { font-size: .92rem; color: #777; line-height: 1.7; max-width: 380px; margin-bottom: 32px; }
+  .btn-group { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn { padding: 13px 34px; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .28s; text-decoration: none; display: inline-block; }
+  .btn-primary { background: var(--red); color: var(--white); border-color: var(--red); }
+  .btn-primary:hover { background: var(--red-dark); border-color: var(--red-dark); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(192,57,43,.35); }
+  .btn-outline { background: transparent; color: var(--text); border-color: #ccc; }
+  .btn-outline:hover { border-color: var(--red); color: var(--red); transform: translateY(-3px); }
+  .hero-image { position: relative; z-index: 5; display: flex; justify-content: center; align-items: center; animation: fadeSlideUp .8s ease .2s both; }
+  .burger-img { width: min(480px, 90%); filter: drop-shadow(0 30px 40px rgba(0,0,0,.22)); animation: floatBurger 3.5s ease-in-out infinite; border-radius: 12px; object-fit: cover; }
+  @keyframes floatBurger { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-18px) rotate(1deg); } }
+
+  /* MARQUEE */
+  .red-banner { background: var(--red); padding: 18px 5%; display: flex; align-items: center; overflow: hidden; }
+  .marquee-track { overflow: hidden; flex: 1; }
+  .marquee-inner { display: flex; gap: 48px; white-space: nowrap; animation: marquee 18s linear infinite; width: max-content; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-inner span { color: var(--white); font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; }
+  .marquee-inner span.dot { color: var(--yellow); }
+
+  /* FEATURES */
+  .features { padding: 80px 5%; text-align: center; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); color: var(--red); letter-spacing: 2px; margin-bottom: 8px; }
+  .section-sub { color: #888; font-size: .95rem; margin-bottom: 48px; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 28px; }
+  .feature-card { background: var(--white); border-radius: 20px; padding: 36px 24px; box-shadow: 0 4px 20px rgba(0,0,0,.06); transition: transform .3s, box-shadow .3s; }
+  .feature-card:hover { transform: translateY(-8px); box-shadow: 0 12px 32px rgba(192,57,43,.12); }
+  .feature-icon { font-size: 2.8rem; margin-bottom: 16px; display: block; animation: iconBounce 2s ease-in-out infinite; }
+  .feature-card:nth-child(2) .feature-icon { animation-delay: .3s; }
+  .feature-card:nth-child(3) .feature-icon { animation-delay: .6s; }
+  .feature-card:nth-child(4) .feature-icon { animation-delay: .9s; }
+  @keyframes iconBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: .88rem; color: #888; line-height: 1.6; }
+
+  /* MENU PREVIEW */
+  .menu { padding: 80px 5%; background: var(--white); }
+  .menu-header { text-align: center; margin-bottom: 48px; }
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+  .menu-card { background: var(--cream); border-radius: 20px; padding: 24px; text-align: center; transition: transform .3s, box-shadow .3s; position: relative; overflow: hidden; }
+  .menu-card::before { content: ''; position: absolute; inset: 0; background: var(--red); transform: scaleY(0); transform-origin: bottom; transition: transform .35s ease; z-index: 0; border-radius: 20px; }
+  .menu-card:hover::before { transform: scaleY(1); }
+  .menu-card:hover { box-shadow: 0 12px 32px rgba(192,57,43,.25); }
+  .menu-card > * { position: relative; z-index: 1; }
+  .menu-card:hover h3, .menu-card:hover p, .menu-card:hover .price { color: var(--white); }
+  .menu-emoji { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+  .menu-card h3 { font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; transition: color .3s; }
+  .menu-card p { font-size: .82rem; color: #888; margin-bottom: 14px; transition: color .3s; }
+  .price { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--red); transition: color .3s; }
+  .view-menu-btn { text-align: center; margin-top: 40px; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 80px 5%; background: var(--cream); text-align: center; }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 48px; }
+  .testi-card { background: var(--white); border-radius: 20px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,.06); text-align: left; transition: transform .3s; }
+  .testi-card:hover { transform: translateY(-6px); }
+  .stars { color: var(--yellow); font-size: 1.1rem; margin-bottom: 12px; }
+  .testi-text { font-size: .9rem; color: #555; line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 10px; }
+  .testi-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: .95rem; }
+  .testi-name { font-weight: 700; font-size: .9rem; }
+  .testi-role { font-size: .78rem; color: #aaa; }
+
+  /* CTA */
+  .cta { padding: 80px 5%; background: var(--red); text-align: center; position: relative; overflow: hidden; }
+  .cta::before { content: ''; position: absolute; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; top: -120px; left: -100px; }
+  .cta::after { content: ''; position: absolute; width: 300px; height: 300px; background: rgba(255,255,255,.04); border-radius: 50%; bottom: -80px; right: -80px; }
+  .cta h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 4rem); color: var(--white); letter-spacing: 2px; margin-bottom: 14px; position: relative; z-index: 1; }
+  .cta p { color: rgba(255,255,255,.8); max-width: 500px; margin: 0 auto 32px; line-height: 1.7; position: relative; z-index: 1; }
+  .btn-white { background: var(--white); color: var(--red); border-color: var(--white); font-weight: 700; position: relative; z-index: 1; }
+  .btn-white:hover { background: var(--yellow); border-color: var(--yellow); color: var(--text); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+
+  /* FOOTER */
+  footer { background: #1a1a1a; color: #aaa; padding: 50px 5% 30px; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand .logo { color: var(--red); font-size: 1.8rem; display: block; margin-bottom: 12px; text-decoration: none; }
+  .footer-brand p { font-size: .88rem; line-height: 1.7; color: #888; max-width: 260px; }
+  .footer-col h4 { color: var(--white); font-size: .95rem; margin-bottom: 16px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: #888; text-decoration: none; font-size: .88rem; transition: color .25s; }
+  .footer-col ul li a:hover { color: var(--red); }
+  .footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: .82rem; }
+  .social-links { display: flex; gap: 12px; }
+  .social-links a { width: 36px; height: 36px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; color: #aaa; text-decoration: none; font-size: 1rem; transition: all .3s; }
+  .social-links a:hover { background: var(--red); color: white; }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) { .footer-top { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; text-align: center; padding: 50px 5%; gap: 40px; }
+    .hero-text { order: 1; } .hero-image { order: 0; }
+    .desc { margin: 0 auto 28px; } .btn-group { justify-content: center; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--white); padding: 20px 5%; gap: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">🍔 FoodStop</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="menu.html" class="nav-cta">Order Now</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <svg class="shape star-red" viewBox="0 0 51 51"><polygon points="25.5,2 32,19 50,19 36,30 41,48 25.5,37 10,48 15,30 1,19 19,19"/></svg>
+  <svg class="shape star-yellow" viewBox="0 0 51 51"><polygon points="25.5,2 32,19 50,19 36,30 41,48 25.5,37 10,48 15,30 1,19 19,19"/></svg>
+  <div class="shape dot-red"></div>
+  <svg class="chili chili-1" viewBox="0 0 80 200"><path d="M40 10 C20 30 10 80 15 130 C18 160 30 190 40 195 C50 190 62 160 65 130 C70 80 60 30 40 10Z" fill="#E74C3C"/><path d="M40 10 C38 5 36 0 40 0 C44 0 42 5 40 10Z" fill="#27AE60"/></svg>
+  <svg class="chili chili-2" viewBox="0 0 60 160"><path d="M30 8 C15 25 8 60 12 100 C14 125 22 150 30 155 C38 150 46 125 48 100 C52 60 45 25 30 8Z" fill="#E74C3C"/><path d="M30 8 C28 3 26 0 30 0 C34 0 32 3 30 8Z" fill="#27AE60"/></svg>
+  <svg class="leaf" viewBox="0 0 80 50"><path d="M5 40 C20 10 60 5 75 25 C60 45 20 50 5 40Z" fill="#27AE60"/><line x1="10" y1="37" x2="70" y2="27" stroke="#1e8449" stroke-width="1.5"/></svg>
+
+  <div class="hero-text">
+    <h1>
+      <span class="script">Delicious</span>
+      <span class="block">Fast Food</span>
+    </h1>
+    <p class="tagline">Quick Food, Good Taste</p>
+    <p class="desc">Craving something bold and delicious? We serve freshly made burgers, crispy fries, and more — hot, fast, and full of flavour every single time.</p>
+    <div class="btn-group">
+      <a href="menu.html" class="btn btn-primary">Order Now</a>
+      <a href="about.html" class="btn btn-outline">Learn More</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img class="burger-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop" alt="Delicious Burger">
+  </div>
+</section>
+
+<div class="red-banner">
+  <div class="marquee-track">
+    <div class="marquee-inner">
+      <span>🍔 BEST BURGERS</span><span class="dot">✦</span>
+      <span>🌶️ SPICY DEALS</span><span class="dot">✦</span>
+      <span>🍟 CRISPY FRIES</span><span class="dot">✦</span>
+      <span>🥤 COLD DRINKS</span><span class="dot">✦</span>
+      <span>⚡ FAST DELIVERY</span><span class="dot">✦</span>
+      <span>🍔 BEST BURGERS</span><span class="dot">✦</span>
+      <span>🌶️ SPICY DEALS</span><span class="dot">✦</span>
+      <span>🍟 CRISPY FRIES</span><span class="dot">✦</span>
+      <span>🥤 COLD DRINKS</span><span class="dot">✦</span>
+      <span>⚡ FAST DELIVERY</span><span class="dot">✦</span>
+    </div>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <h2 class="section-title reveal">Why Choose Us?</h2>
+  <p class="section-sub reveal">We make every bite unforgettable</p>
+  <div class="features-grid">
+    <div class="feature-card reveal"><span class="feature-icon">⚡</span><h3>Super Fast Delivery</h3><p>Your order arrives hot and fresh at your door in under 30 minutes.</p></div>
+    <div class="feature-card reveal"><span class="feature-icon">🥩</span><h3>Fresh Ingredients</h3><p>Only the finest, hand-picked ingredients go into every single meal.</p></div>
+    <div class="feature-card reveal"><span class="feature-icon">💰</span><h3>Great Value</h3><p>Premium taste without the premium price. Daily deals available.</p></div>
+    <div class="feature-card reveal"><span class="feature-icon">❤️</span><h3>Made with Love</h3><p>Every burger is crafted with care by our passionate kitchen team.</p></div>
+  </div>
+</section>
+
+<section class="menu" id="menu">
+  <div class="menu-header">
+    <h2 class="section-title reveal">Our Popular Items</h2>
+    <p class="section-sub reveal">Taste the difference in every bite</p>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card reveal"><span class="menu-emoji">🍔</span><h3>Classic Burger</h3><p>Juicy beef patty with fresh veggies</p><div class="price">$8.99</div></div>
+    <div class="menu-card reveal"><span class="menu-emoji">🌶️</span><h3>Spicy Burger</h3><p>Packed with fiery jalapeños & sauce</p><div class="price">$9.99</div></div>
+    <div class="menu-card reveal"><span class="menu-emoji">🍟</span><h3>Crispy Fries</h3><p>Golden, crunchy, perfectly salted</p><div class="price">$3.49</div></div>
+    <div class="menu-card reveal"><span class="menu-emoji">🥤</span><h3>Mega Shake</h3><p>Thick & creamy in 5 flavours</p><div class="price">$4.99</div></div>
+  </div>
+  <div class="view-menu-btn reveal" style="margin-top:40px;">
+    <a href="menu.html" class="btn btn-primary">View Full Menu →</a>
+  </div>
+</section>
+
+<section class="testimonials">
+  <h2 class="section-title reveal">What Our Customers Say</h2>
+  <p class="section-sub reveal">Real reviews from real food lovers</p>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"Best burger I've ever had! The delivery was super fast and food was still hot. FoodStop never disappoints!"</p>
+      <div class="testi-author"><div class="testi-avatar">AK</div><div><div class="testi-name">Ahmed Khan</div><div class="testi-role">Regular Customer</div></div></div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"The Spicy Burger is AMAZING. I order it every week. The value for money is unbeatable in the whole city!"</p>
+      <div class="testi-author"><div class="testi-avatar">SR</div><div><div class="testi-name">Sara Raza</div><div class="testi-role">Food Blogger</div></div></div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★☆</div>
+      <p class="testi-text">"Fresh ingredients, great taste. My kids absolutely love the crispy fries and milkshakes. Family favourite!"</p>
+      <div class="testi-author"><div class="testi-avatar">MF</div><div><div class="testi-name">Maria Farooq</div><div class="testi-role">Loyal Customer</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 class="reveal">Hungry? Order Now!</h2>
+  <p class="reveal">Don't wait — your next favourite meal is just a click away. Fresh, hot and delivered fast.</p>
+  <a href="menu.html" class="btn btn-white reveal">Order Today</a>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">🍔 FoodStop</a>
+      <p>Serving the freshest, most delicious fast food since 2015. Hot, fast, and made with love every single time.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Opening Hours</h4>
+      <ul>
+        <li><a href="#">Mon–Fri: 9am–11pm</a></li>
+        <li><a href="#">Sat–Sun: 10am–12am</a></li>
+        <li><a href="#">Holidays: 11am–10pm</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+123456789">📞 +1 234 567 89</a></li>
+        <li><a href="mailto:hello@foodstop.com">✉️ hello@foodstop.com</a></li>
+        <li><a href="contact.html">📍 123 Food Street, NY</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 FoodStop. All rights reserved.</p>
+    <div class="social-links">
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Instagram">ig</a>
+      <a href="#" title="Twitter">tw</a>
+      <a href="#" title="WhatsApp">wa</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.05) + 's';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

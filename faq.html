@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — FoodStop</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --red: #C0392B; --red-dark: #962d22; --yellow: #F5A623; --yellow-light: #FDE3A7; --cream: #FDF6EE; --text: #222; --white: #fff; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 68px; background: var(--white); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 16px rgba(0,0,0,.08); }
+  .logo { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: var(--red); font-weight: 700; text-decoration: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text); font-weight: 700; font-size: .93rem; position: relative; transition: color .25s; padding: 4px 0; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--red); transition: width .3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--red); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--red); color: var(--white) !important; padding: 8px 22px !important; border-radius: 50px; }
+  .nav-cta::after { display: none !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 3px; background: var(--text); border-radius: 2px; transition: all .3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  .page-hero { background: var(--red); padding: 80px 5%; text-align: center; position: relative; overflow: hidden; }
+  .page-hero::before { content: ''; position: absolute; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; top: -150px; right: -100px; }
+  .page-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 7vw, 5rem); color: var(--white); letter-spacing: 3px; position: relative; z-index: 1; }
+  .page-hero p { color: rgba(255,255,255,.8); font-size: 1rem; margin-top: 12px; position: relative; z-index: 1; }
+  .breadcrumb { display: flex; justify-content: center; gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+  .breadcrumb a { color: rgba(255,255,255,.7); text-decoration: none; font-size: .85rem; }
+  .breadcrumb a:hover { color: var(--white); }
+  .breadcrumb span { color: var(--yellow); font-size: .85rem; }
+
+  /* FAQ */
+  .faq-section { padding: 80px 5%; max-width: 860px; margin: 0 auto; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); color: var(--red); letter-spacing: 2px; margin-bottom: 8px; }
+  .section-sub { color: #888; font-size: .95rem; margin-bottom: 48px; }
+
+  .faq-category { margin-bottom: 48px; }
+  .faq-cat-title { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--text); letter-spacing: 1px; }
+  .faq-cat-title span { font-size: 1.4rem; }
+
+  .faq-item { background: var(--white); border-radius: 16px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.05); transition: box-shadow .3s; }
+  .faq-item:hover { box-shadow: 0 6px 24px rgba(192,57,43,.1); }
+  .faq-q { width: 100%; background: none; border: none; text-align: left; padding: 20px 24px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .97rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: color .25s; }
+  .faq-q:hover { color: var(--red); }
+  .faq-q .icon { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all .3s; }
+  .faq-item.open .faq-q { color: var(--red); }
+  .faq-item.open .faq-q .icon { background: var(--red); color: white; transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; padding: 0 24px; }
+  .faq-item.open .faq-a { max-height: 300px; padding: 0 24px 20px; }
+  .faq-a p { font-size: .9rem; color: #666; line-height: 1.7; }
+
+  /* SEARCH */
+  .faq-search { margin-bottom: 40px; position: relative; }
+  .faq-search input { width: 100%; padding: 16px 24px 16px 52px; border-radius: 50px; border: 2px solid #eee; font-family: 'Nunito', sans-serif; font-size: .95rem; outline: none; transition: border-color .25s; background: var(--white); }
+  .faq-search input:focus { border-color: var(--red); }
+  .faq-search .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
+
+  /* CONTACT PROMPT */
+  .contact-prompt { background: var(--red); border-radius: 24px; padding: 48px; text-align: center; margin: 40px 0; }
+  .contact-prompt h3 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--white); letter-spacing: 2px; margin-bottom: 12px; }
+  .contact-prompt p { color: rgba(255,255,255,.8); margin-bottom: 24px; }
+  .btn { padding: 13px 34px; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .28s; text-decoration: none; display: inline-block; }
+  .btn-white { background: var(--white); color: var(--red); border-color: var(--white); }
+  .btn-white:hover { background: var(--yellow); border-color: var(--yellow); color: var(--text); transform: translateY(-3px); }
+
+  footer { background: #1a1a1a; color: #aaa; padding: 50px 5% 30px; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand .logo { color: var(--red); font-size: 1.8rem; display: block; margin-bottom: 12px; }
+  .footer-brand p { font-size: .88rem; line-height: 1.7; color: #888; max-width: 260px; }
+  .footer-col h4 { color: var(--white); font-size: .95rem; margin-bottom: 16px; font-weight: 800; text-transform: uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: #888; text-decoration: none; font-size: .88rem; transition: color .25s; }
+  .footer-col ul li a:hover { color: var(--red); }
+  .footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: .82rem; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--white); padding: 20px 5%; gap: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .nav-links.open { display: flex; } .hamburger { display: flex; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">🍔 FoodStop</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="faq.html" class="active">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="menu.html" class="nav-cta">Order Now</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <h1>FAQ</h1>
+  <p>Answers to your most common questions</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span>›</span><span style="color:white;">FAQ</span>
+  </div>
+</div>
+
+<div class="faq-section">
+  <h2 class="section-title reveal" style="text-align:center;">Frequently Asked Questions</h2>
+  <p class="section-sub reveal" style="text-align:center;">Can't find an answer? Contact us directly!</p>
+
+  <div class="faq-search reveal">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="faqSearch" placeholder="Search questions..." oninput="searchFAQ()">
+  </div>
+
+  <div id="faqContent">
+    <!-- ORDERING -->
+    <div class="faq-category reveal">
+      <div class="faq-cat-title"><span>🛒</span> Ordering</div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How do I place an order? <span class="icon">+</span></button>
+        <div class="faq-a"><p>You can place your order directly through our website by browsing the menu and clicking "Add". Alternatively, call us on +1 234 567 89 or visit us in store. We accept orders 7 days a week during opening hours.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Can I customise my order? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Absolutely! We love customising orders. You can add or remove ingredients, request extra sauces, or adjust spice levels. Just let us know in the order notes or mention it when you call.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What payment methods do you accept? <span class="icon">+</span></button>
+        <div class="faq-a"><p>We accept all major credit and debit cards, cash on delivery, Apple Pay, Google Pay, and bank transfers for large orders. Online orders are processed via our secure payment gateway.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Can I cancel or modify my order? <span class="icon">+</span></button>
+        <div class="faq-a"><p>You can cancel or modify your order within 5 minutes of placing it by calling us immediately. Once the order has been sent to the kitchen, we may not be able to make changes, but we'll always try our best!</p></div>
+      </div>
+    </div>
+
+    <!-- DELIVERY -->
+    <div class="faq-category reveal">
+      <div class="faq-cat-title"><span>🚚</span> Delivery</div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How long does delivery take? <span class="icon">+</span></button>
+        <div class="faq-a"><p>We aim to deliver within 25–35 minutes for orders within our delivery zone. During peak hours (12pm–2pm and 6pm–9pm), delivery may take up to 45 minutes. You'll receive a tracking link once your order is on its way!</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the delivery charge? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Delivery is FREE for orders over $20. For orders under $20, a flat delivery fee of $2.99 applies. We also offer free delivery on your first order — use code WELCOME at checkout!</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What areas do you deliver to? <span class="icon">+</span></button>
+        <div class="faq-a"><p>We currently deliver within a 5-mile radius of our restaurant at 123 Food Street, New York. Enter your postcode on our order page to check if you're in our delivery zone. We're always expanding!</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What if my order arrives cold or incorrect? <span class="icon">+</span></button>
+        <div class="faq-a"><p>We're really sorry if that happens! Please contact us within 30 minutes of receiving your order. We'll either resend your order or issue a full refund. Customer satisfaction is our top priority.</p></div>
+      </div>
+    </div>
+
+    <!-- FOOD & ALLERGENS -->
+    <div class="faq-category reveal">
+      <div class="faq-cat-title"><span>🥗</span> Food & Allergens</div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Do you have vegetarian or vegan options? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Yes! Our Veggie Burger and Side Salad are vegetarian-friendly. We also have vegan options available — just ask our team and we'll guide you through what works for your diet. More vegan items are coming soon!</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Do you cater for allergens? <span class="icon">+</span></button>
+        <div class="faq-a"><p>We take allergens very seriously. Our menu items contain information about the 14 major allergens. Please inform us of any allergies when ordering and we will do our best to accommodate you. However, our kitchen handles all common allergens.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Are your ingredients fresh? <span class="icon">+</span></button>
+        <div class="faq-a"><p>100% yes! We source all our ingredients fresh every single day from trusted local suppliers. We never use frozen beef patties — everything is freshly prepared in our kitchen before your order is made.</p></div>
+      </div>
+    </div>
+
+    <!-- OPENING HOURS -->
+    <div class="faq-category reveal">
+      <div class="faq-cat-title"><span>🕐</span> Opening Hours & Location</div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What are your opening hours? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Monday–Friday: 9am–11pm | Saturday–Sunday: 10am–12am | Public Holidays: 11am–10pm. Last orders are taken 30 minutes before closing time.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Where are you located? <span class="icon">+</span></button>
+        <div class="faq-a"><p>We're located at 123 Food Street, New York, NY 10001. We're right next to Central Park subway station, with parking available at the back of the building. Come visit us!</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Do you offer dine-in? <span class="icon">+</span></button>
+        <div class="faq-a"><p>Yes! We have a cosy 40-seat dine-in area. No reservation required for groups under 6. For larger groups or private events, please call us in advance to arrange seating.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-prompt reveal">
+    <h3>Still Have Questions?</h3>
+    <p>Our friendly team is always happy to help. Get in touch with us directly!</p>
+    <a href="contact.html" class="btn btn-white">Contact Us</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand"><a href="index.html" class="logo">🍔 FoodStop</a><p>Serving the freshest fast food since 2015. Hot, fast and made with love.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="menu.html">Menu</a></li><li><a href="faq.html">FAQ</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Opening Hours</h4><ul><li><a href="#">Mon–Fri: 9am–11pm</a></li><li><a href="#">Sat–Sun: 10am–12am</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+123456789">📞 +1 234 567 89</a></li><li><a href="mailto:hello@foodstop.com">✉️ hello@foodstop.com</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 FoodStop. All rights reserved.</p></div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); navLinks.classList.toggle('open'); });
+
+  function toggleFAQ(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  function searchFAQ() {
+    const q = document.getElementById('faqSearch').value.toLowerCase();
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(q) ? '' : 'none';
+    });
+    document.querySelectorAll('.faq-category').forEach(cat => {
+      const visible = [...cat.querySelectorAll('.faq-item')].some(i => i.style.display !== 'none');
+      cat.style.display = visible ? '' : 'none';
+    });
+  }
+
+  const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

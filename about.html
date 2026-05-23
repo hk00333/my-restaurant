@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — FoodStop</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --red: #C0392B; --red-dark: #962d22; --yellow: #F5A623; --yellow-light: #FDE3A7; --cream: #FDF6EE; --text: #222; --white: #fff; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 68px; background: var(--white); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 16px rgba(0,0,0,.08); }
+  .logo { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: var(--red); font-weight: 700; text-decoration: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text); font-weight: 700; font-size: .93rem; position: relative; transition: color .25s; padding: 4px 0; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--red); transition: width .3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--red); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--red); color: var(--white) !important; padding: 8px 22px !important; border-radius: 50px; }
+  .nav-cta::after { display: none !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 3px; background: var(--text); border-radius: 2px; transition: all .3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* PAGE HERO */
+  .page-hero { background: var(--red); padding: 80px 5%; text-align: center; position: relative; overflow: hidden; }
+  .page-hero::before { content: ''; position: absolute; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; top: -150px; right: -100px; }
+  .page-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 7vw, 5rem); color: var(--white); letter-spacing: 3px; position: relative; z-index: 1; }
+  .page-hero p { color: rgba(255,255,255,.8); font-size: 1rem; margin-top: 12px; position: relative; z-index: 1; }
+  .breadcrumb { display: flex; justify-content: center; gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+  .breadcrumb a { color: rgba(255,255,255,.7); text-decoration: none; font-size: .85rem; }
+  .breadcrumb a:hover { color: var(--white); }
+  .breadcrumb span { color: var(--yellow); font-size: .85rem; }
+
+  /* STORY */
+  .story { padding: 80px 5%; }
+  .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .story-img { border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+  .story-img img { width: 100%; height: 420px; object-fit: cover; display: block; transition: transform .4s; }
+  .story-img:hover img { transform: scale(1.05); }
+  .story-text .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--red); letter-spacing: 2px; margin-bottom: 8px; }
+  .accent-line { width: 60px; height: 4px; background: var(--yellow); border-radius: 2px; margin-bottom: 20px; }
+  .story-text p { font-size: .95rem; color: #555; line-height: 1.8; margin-bottom: 16px; }
+
+  /* STATS */
+  .stats { background: var(--red); padding: 60px 5%; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+  .stat-item { color: var(--white); }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); color: var(--yellow); display: block; }
+  .stat-label { font-size: .9rem; opacity: .85; font-weight: 600; }
+
+  /* TEAM */
+  .team { padding: 80px 5%; background: var(--white); text-align: center; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); color: var(--red); letter-spacing: 2px; margin-bottom: 8px; }
+  .section-sub { color: #888; font-size: .95rem; margin-bottom: 48px; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+  .team-card { background: var(--cream); border-radius: 20px; padding: 32px 20px; text-align: center; transition: transform .3s, box-shadow .3s; }
+  .team-card:hover { transform: translateY(-8px); box-shadow: 0 12px 32px rgba(192,57,43,.12); }
+  .team-avatar { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; background: var(--yellow-light); }
+  .team-card h3 { font-weight: 800; font-size: 1rem; margin-bottom: 4px; }
+  .team-card .role { font-size: .82rem; color: var(--red); font-weight: 700; margin-bottom: 10px; }
+  .team-card p { font-size: .82rem; color: #888; line-height: 1.6; }
+
+  /* VALUES */
+  .values { padding: 80px 5%; background: var(--cream); }
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 28px; margin-top: 48px; }
+  .value-card { background: var(--white); border-radius: 20px; padding: 32px 24px; border-left: 5px solid var(--red); transition: transform .3s; }
+  .value-card:hover { transform: translateY(-6px); }
+  .value-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
+  .value-card h3 { font-weight: 800; margin-bottom: 8px; }
+  .value-card p { font-size: .88rem; color: #888; line-height: 1.6; }
+
+  /* CTA */
+  .cta { padding: 80px 5%; background: var(--red); text-align: center; position: relative; overflow: hidden; }
+  .cta h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 4rem); color: var(--white); letter-spacing: 2px; margin-bottom: 14px; }
+  .cta p { color: rgba(255,255,255,.8); max-width: 500px; margin: 0 auto 32px; line-height: 1.7; }
+  .btn { padding: 13px 34px; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .28s; text-decoration: none; display: inline-block; }
+  .btn-white { background: var(--white); color: var(--red); border-color: var(--white); }
+  .btn-white:hover { background: var(--yellow); border-color: var(--yellow); color: var(--text); transform: translateY(-3px); }
+
+  /* FOOTER */
+  footer { background: #1a1a1a; color: #aaa; padding: 50px 5% 30px; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand .logo { color: var(--red); font-size: 1.8rem; display: block; margin-bottom: 12px; }
+  .footer-brand p { font-size: .88rem; line-height: 1.7; color: #888; max-width: 260px; }
+  .footer-col h4 { color: var(--white); font-size: .95rem; margin-bottom: 16px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: #888; text-decoration: none; font-size: .88rem; transition: color .25s; }
+  .footer-col ul li a:hover { color: var(--red); }
+  .footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: .82rem; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 860px) { .story-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--white); padding: 20px 5%; gap: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .nav-links.open { display: flex; } .hamburger { display: flex; }
+    .footer-top { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">🍔 FoodStop</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About Us</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="menu.html" class="nav-cta">Order Now</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <h1>About Us</h1>
+  <p>Our story, our team, our passion for food</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span style="color:white;">About Us</span>
+  </div>
+</div>
+
+<section class="story">
+  <div class="story-grid">
+    <div class="story-img reveal">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&auto=format&fit=crop" alt="Our Kitchen">
+    </div>
+    <div class="story-text reveal">
+      <h2 class="section-title">Our Story</h2>
+      <div class="accent-line"></div>
+      <p>FoodStop was born in 2015 from a simple dream — to serve the best fast food in the city without compromising on quality. What started as a small roadside burger stall has grown into a beloved food destination with thousands of loyal customers.</p>
+      <p>Our founder, Chef Daniel, believed that fast food didn't have to mean low-quality food. Every recipe was carefully developed to strike the perfect balance between speed, taste, and nutrition. Fresh ingredients. Real flavours. Real love.</p>
+      <p>Today, FoodStop serves over 500 happy customers every day. Our kitchen team works tirelessly to ensure that every single order is made fresh, hot, and with the same passion as our very first burger.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal"><span class="stat-num">10+</span><span class="stat-label">Years of Experience</span></div>
+    <div class="stat-item reveal"><span class="stat-num">500+</span><span class="stat-label">Daily Customers</span></div>
+    <div class="stat-item reveal"><span class="stat-num">50+</span><span class="stat-label">Menu Items</span></div>
+    <div class="stat-item reveal"><span class="stat-num">4.9★</span><span class="stat-label">Average Rating</span></div>
+  </div>
+</section>
+
+<section class="team">
+  <h2 class="section-title reveal">Meet Our Team</h2>
+  <p class="section-sub reveal">The passionate people behind every delicious bite</p>
+  <div class="team-grid">
+    <div class="team-card reveal"><div class="team-avatar">👨‍🍳</div><h3>Chef Daniel</h3><div class="role">Head Chef & Founder</div><p>With 15 years of culinary experience, Daniel leads the kitchen with passion and precision.</p></div>
+    <div class="team-card reveal"><div class="team-avatar">👩‍🍳</div><h3>Maria Santos</h3><div class="role">Sous Chef</div><p>Maria brings creative flair to every dish, experimenting with bold new flavour combinations.</p></div>
+    <div class="team-card reveal"><div class="team-avatar">👨‍💼</div><h3>James Lee</h3><div class="role">Operations Manager</div><p>James ensures every order is delivered hot, fresh and on time, every single time.</p></div>
+    <div class="team-card reveal"><div class="team-avatar">👩‍💼</div><h3>Priya Sharma</h3><div class="role">Customer Relations</div><p>Priya makes sure every customer leaves with a smile — even if it's virtual!</p></div>
+  </div>
+</section>
+
+<section class="values">
+  <div style="text-align:center;">
+    <h2 class="section-title reveal">Our Core Values</h2>
+    <p class="section-sub reveal">What we stand for every day</p>
+  </div>
+  <div class="values-grid">
+    <div class="value-card reveal"><span class="value-icon">🌿</span><h3>Quality First</h3><p>We never compromise on ingredients. Every item is sourced fresh daily from trusted local suppliers.</p></div>
+    <div class="value-card reveal"><span class="value-icon">⚡</span><h3>Speed & Efficiency</h3><p>Fast food means fast service. We pride ourselves on getting orders out in record time without sacrificing quality.</p></div>
+    <div class="value-card reveal"><span class="value-icon">❤️</span><h3>Community Love</h3><p>FoodStop is part of the community. We support local farmers, hire locally, and give back whenever we can.</p></div>
+    <div class="value-card reveal"><span class="value-icon">♻️</span><h3>Sustainability</h3><p>We use eco-friendly packaging and work hard to minimise food waste in everything we do.</p></div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to Try Our Food?</h2>
+  <p>Browse our full menu and order your favourite meal delivered straight to your door.</p>
+  <a href="menu.html" class="btn btn-white">View Our Menu</a>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">🍔 FoodStop</a>
+      <p>Serving the freshest, most delicious fast food since 2015. Hot, fast, and made with love every single time.</p>
+    </div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="menu.html">Menu</a></li><li><a href="faq.html">FAQ</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Opening Hours</h4><ul><li><a href="#">Mon–Fri: 9am–11pm</a></li><li><a href="#">Sat–Sun: 10am–12am</a></li><li><a href="#">Holidays: 11am–10pm</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+123456789">📞 +1 234 567 89</a></li><li><a href="mailto:hello@foodstop.com">✉️ hello@foodstop.com</a></li><li><a href="contact.html">📍 123 Food Street, NY</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 FoodStop. All rights reserved.</p></div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); navLinks.classList.toggle('open'); });
+  const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

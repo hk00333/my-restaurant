@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu — FoodStop</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --red: #C0392B; --red-dark: #962d22; --yellow: #F5A623; --yellow-light: #FDE3A7; --cream: #FDF6EE; --text: #222; --white: #fff; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 68px; background: var(--white); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 16px rgba(0,0,0,.08); }
+  .logo { font-family: 'Dancing Script', cursive; font-size: 1.7rem; color: var(--red); font-weight: 700; text-decoration: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text); font-weight: 700; font-size: .93rem; position: relative; transition: color .25s; padding: 4px 0; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--red); transition: width .3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--red); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-cta { background: var(--red); color: var(--white) !important; padding: 8px 22px !important; border-radius: 50px; }
+  .nav-cta::after { display: none !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 3px; background: var(--text); border-radius: 2px; transition: all .3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  .page-hero { background: var(--red); padding: 80px 5%; text-align: center; position: relative; overflow: hidden; }
+  .page-hero::before { content: ''; position: absolute; width: 400px; height: 400px; background: rgba(255,255,255,.06); border-radius: 50%; top: -150px; right: -100px; }
+  .page-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 7vw, 5rem); color: var(--white); letter-spacing: 3px; position: relative; z-index: 1; }
+  .page-hero p { color: rgba(255,255,255,.8); font-size: 1rem; margin-top: 12px; position: relative; z-index: 1; }
+  .breadcrumb { display: flex; justify-content: center; gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+  .breadcrumb a { color: rgba(255,255,255,.7); text-decoration: none; font-size: .85rem; }
+  .breadcrumb a:hover { color: var(--white); }
+  .breadcrumb span { color: var(--yellow); font-size: .85rem; }
+
+  /* MENU */
+  .menu-section { padding: 80px 5%; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); color: var(--red); letter-spacing: 2px; margin-bottom: 8px; }
+
+  /* FILTER TABS */
+  .filter-tabs { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
+  .tab { padding: 10px 24px; border-radius: 50px; border: 2px solid #ddd; background: none; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .88rem; cursor: pointer; transition: all .28s; color: var(--text); }
+  .tab:hover, .tab.active { background: var(--red); color: var(--white); border-color: var(--red); }
+
+  /* CATEGORY HEADER */
+  .cat-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; margin-top: 48px; }
+  .cat-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--text); letter-spacing: 1px; }
+  .cat-line { flex: 1; height: 2px; background: #eee; }
+  .cat-emoji { font-size: 1.8rem; }
+
+  /* MENU GRID */
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+  .menu-card { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.06); transition: transform .3s, box-shadow .3s; }
+  .menu-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(192,57,43,.15); }
+  .card-img { width: 100%; height: 180px; background: var(--yellow-light); display: flex; align-items: center; justify-content: center; font-size: 4rem; position: relative; overflow: hidden; }
+  .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .menu-card:hover .card-img img { transform: scale(1.08); }
+  .badge { position: absolute; top: 12px; right: 12px; background: var(--red); color: white; font-size: .72rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; }
+  .card-body { padding: 18px; }
+  .card-body h3 { font-weight: 800; font-size: 1rem; margin-bottom: 4px; }
+  .card-body p { font-size: .82rem; color: #888; margin-bottom: 14px; line-height: 1.5; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .price { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--red); }
+  .add-btn { background: var(--red); color: white; border: none; padding: 7px 18px; border-radius: 50px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem; cursor: pointer; transition: background .25s, transform .25s; }
+  .add-btn:hover { background: var(--red-dark); transform: scale(1.05); }
+
+  /* SPECIAL OFFER */
+  .special { background: var(--red); margin: 60px 5%; border-radius: 24px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; position: relative; overflow: hidden; }
+  .special::after { content: '🍔'; position: absolute; font-size: 8rem; right: 5%; top: 50%; transform: translateY(-50%) rotate(15deg); opacity: .15; }
+  .special h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--white); letter-spacing: 2px; margin-bottom: 12px; }
+  .special p { color: rgba(255,255,255,.8); line-height: 1.7; margin-bottom: 24px; }
+  .btn { padding: 13px 34px; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .28s; text-decoration: none; display: inline-block; }
+  .btn-white { background: var(--white); color: var(--red); border-color: var(--white); }
+  .btn-white:hover { background: var(--yellow); border-color: var(--yellow); color: var(--text); transform: translateY(-3px); }
+  .deal-badge { background: var(--yellow); color: var(--text); display: inline-block; padding: 6px 18px; border-radius: 50px; font-weight: 800; font-size: .9rem; margin-bottom: 16px; }
+
+  /* CART TOAST */
+  .toast { position: fixed; bottom: 30px; right: 30px; background: #222; color: white; padding: 14px 24px; border-radius: 12px; font-weight: 700; font-size: .9rem; opacity: 0; transform: translateY(20px); transition: all .3s; z-index: 999; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  footer { background: #1a1a1a; color: #aaa; padding: 50px 5% 30px; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand .logo { color: var(--red); font-size: 1.8rem; display: block; margin-bottom: 12px; }
+  .footer-brand p { font-size: .88rem; line-height: 1.7; color: #888; max-width: 260px; }
+  .footer-col h4 { color: var(--white); font-size: .95rem; margin-bottom: 16px; font-weight: 800; text-transform: uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: #888; text-decoration: none; font-size: .88rem; transition: color .25s; }
+  .footer-col ul li a:hover { color: var(--red); }
+  .footer-bottom { border-top: 1px solid #333; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: .82rem; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 860px) { .special { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: var(--white); padding: 20px 5%; gap: 16px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .nav-links.open { display: flex; } .hamburger { display: flex; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">🍔 FoodStop</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="menu.html" class="nav-cta">Order Now</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero">
+  <h1>Our Full Menu</h1>
+  <p>Freshly made, hot and ready to deliver</p>
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span>›</span><span style="color:white;">Menu</span>
+  </div>
+</div>
+
+<section class="menu-section">
+  <div style="text-align:center; margin-bottom:40px;">
+    <h2 class="section-title reveal">What Are You Craving?</h2>
+    <p style="color:#888; margin-bottom:28px;" class="reveal">Browse our full selection of freshly made food</p>
+    <div class="filter-tabs">
+      <button class="tab active" onclick="filterMenu('all', this)">🍽️ All Items</button>
+      <button class="tab" onclick="filterMenu('burgers', this)">🍔 Burgers</button>
+      <button class="tab" onclick="filterMenu('sides', this)">🍟 Sides</button>
+      <button class="tab" onclick="filterMenu('drinks', this)">🥤 Drinks</button>
+      <button class="tab" onclick="filterMenu('desserts', this)">🍦 Desserts</button>
+      <button class="tab" onclick="filterMenu('combos', this)">🎁 Combos</button>
+    </div>
+  </div>
+
+  <!-- BURGERS -->
+  <div class="cat-section" data-cat="burgers">
+    <div class="cat-header reveal"><span class="cat-emoji">🍔</span><h2>Burgers</h2><div class="cat-line"></div></div>
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&auto=format&fit=crop" alt="Classic Burger"></div>
+        <div class="card-body"><h3>Classic Burger</h3><p>Juicy beef patty, fresh lettuce, tomato, cheddar & our secret sauce</p><div class="card-footer"><span class="price">$8.99</span><button class="add-btn" onclick="addToCart('Classic Burger')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=400&auto=format&fit=crop" alt="Spicy Burger"><span class="badge">🌶️ Hot</span></div>
+        <div class="card-body"><h3>Spicy Burger</h3><p>Fiery jalapeños, sriracha mayo, crispy onion rings & pepper jack cheese</p><div class="card-footer"><span class="price">$9.99</span><button class="add-btn" onclick="addToCart('Spicy Burger')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400&auto=format&fit=crop" alt="Double Stack"><span class="badge">⭐ Popular</span></div>
+        <div class="card-body"><h3>Double Stack</h3><p>Two beef patties, double cheese, bacon & our signature smoky BBQ sauce</p><div class="card-footer"><span class="price">$12.99</span><button class="add-btn" onclick="addToCart('Double Stack')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#f0fef4;">🥬</div>
+        <div class="card-body"><h3>Veggie Burger</h3><p>Black bean patty, avocado, fresh greens & tangy yoghurt sauce. Deliciously healthy!</p><div class="card-footer"><span class="price">$9.49</span><button class="add-btn" onclick="addToCart('Veggie Burger')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff8f0;">🍗</div>
+        <div class="card-body"><h3>Crispy Chicken</h3><p>Crispy fried chicken fillet, coleslaw, pickles & honey mustard on a brioche bun</p><div class="card-footer"><span class="price">$10.49</span><button class="add-btn" onclick="addToCart('Crispy Chicken')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff5f5;">🧀</div>
+        <div class="card-body"><h3>Cheese Feast</h3><p>Triple cheese blend — cheddar, mozzarella & gouda — melted over a juicy beef patty</p><div class="card-footer"><span class="price">$11.49</span><button class="add-btn" onclick="addToCart('Cheese Feast')">+ Add</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDES -->
+  <div class="cat-section" data-cat="sides">
+    <div class="cat-header reveal"><span class="cat-emoji">🍟</span><h2>Sides</h2><div class="cat-line"></div></div>
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&auto=format&fit=crop" alt="Crispy Fries"><span class="badge">⭐ Popular</span></div>
+        <div class="card-body"><h3>Crispy Fries</h3><p>Golden, perfectly salted fries — crunchy outside, fluffy inside. Classic favourite.</p><div class="card-footer"><span class="price">$3.49</span><button class="add-btn" onclick="addToCart('Crispy Fries')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff8e1;">🧅</div>
+        <div class="card-body"><h3>Onion Rings</h3><p>Beer-battered onion rings, crispy and golden. Served with a smoky dipping sauce.</p><div class="card-footer"><span class="price">$4.49</span><button class="add-btn" onclick="addToCart('Onion Rings')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff0f0;">🌶️</div>
+        <div class="card-body"><h3>Loaded Fries</h3><p>Crispy fries topped with melted cheese, jalapeños & a drizzle of sriracha sauce</p><div class="card-footer"><span class="price">$5.99</span><button class="add-btn" onclick="addToCart('Loaded Fries')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#f5fff0;">🥗</div>
+        <div class="card-body"><h3>Side Salad</h3><p>Fresh greens, cherry tomatoes, cucumber & a light lemon vinaigrette dressing</p><div class="card-footer"><span class="price">$3.99</span><button class="add-btn" onclick="addToCart('Side Salad')">+ Add</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRINKS -->
+  <div class="cat-section" data-cat="drinks">
+    <div class="cat-header reveal"><span class="cat-emoji">🥤</span><h2>Drinks</h2><div class="cat-line"></div></div>
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fce4ec;">🍓</div>
+        <div class="card-body"><h3>Strawberry Shake</h3><p>Thick, creamy strawberry milkshake made with real fruit. Absolutely divine!</p><div class="card-footer"><span class="price">$4.99</span><button class="add-btn" onclick="addToCart('Strawberry Shake')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#efebe9;">🍫</div>
+        <div class="card-body"><h3>Choc Shake</h3><p>Rich Belgian chocolate milkshake — indulgent, thick and irresistibly creamy</p><div class="card-footer"><span class="price">$4.99</span><button class="add-btn" onclick="addToCart('Choc Shake')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#e8f5e9;">🍃</div>
+        <div class="card-body"><h3>Mint Lemonade</h3><p>Freshly squeezed lemon with cooling mint leaves. The perfect refresher!</p><div class="card-footer"><span class="price">$3.49</span><button class="add-btn" onclick="addToCart('Mint Lemonade')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#e3f2fd;">🥤</div>
+        <div class="card-body"><h3>Soft Drink</h3><p>Choice of Coke, Sprite, Fanta or Ginger Beer. Large cup with plenty of ice.</p><div class="card-footer"><span class="price">$2.49</span><button class="add-btn" onclick="addToCart('Soft Drink')">+ Add</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESSERTS -->
+  <div class="cat-section" data-cat="desserts">
+    <div class="cat-header reveal"><span class="cat-emoji">🍦</span><h2>Desserts</h2><div class="cat-line"></div></div>
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff3e0;">🍦</div>
+        <div class="card-body"><h3>Soft Serve</h3><p>Classic vanilla or chocolate soft serve ice cream in a crispy cone</p><div class="card-footer"><span class="price">$2.99</span><button class="add-btn" onclick="addToCart('Soft Serve')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fce4ec;">🍰</div>
+        <div class="card-body"><h3>Cheesecake Slice</h3><p>New York-style baked cheesecake with a buttery biscuit base. Heavenly!</p><div class="card-footer"><span class="price">$4.49</span><button class="add-btn" onclick="addToCart('Cheesecake')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#efebe9;">🍪</div>
+        <div class="card-body"><h3>Cookie Dough</h3><p>Warm, gooey chocolate chip cookie dough served with vanilla ice cream</p><div class="card-footer"><span class="price">$5.49</span><button class="add-btn" onclick="addToCart('Cookie Dough')">+ Add</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMBOS -->
+  <div class="cat-section" data-cat="combos">
+    <div class="cat-header reveal"><span class="cat-emoji">🎁</span><h2>Combo Deals</h2><div class="cat-line"></div></div>
+    <div class="menu-grid">
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff8e1;"><span class="badge" style="position:absolute;top:12px;right:12px;">Save 20%</span>🎁</div>
+        <div class="card-body"><h3>Classic Combo</h3><p>Classic Burger + Crispy Fries + Soft Drink. The perfect everyday meal deal!</p><div class="card-footer"><span class="price">$12.99</span><button class="add-btn" onclick="addToCart('Classic Combo')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#fff0f0;"><span class="badge" style="position:absolute;top:12px;right:12px;">Best Value</span>🔥</div>
+        <div class="card-body"><h3>Spicy Combo</h3><p>Spicy Burger + Loaded Fries + Mint Lemonade. For the brave and bold!</p><div class="card-footer"><span class="price">$14.99</span><button class="add-btn" onclick="addToCart('Spicy Combo')">+ Add</button></div></div>
+      </div>
+      <div class="menu-card reveal">
+        <div class="card-img" style="font-size:4rem; background:#e8f5e9;"><span class="badge" style="position:absolute;top:12px;right:12px;">Family</span>👨‍👩‍👧‍👦</div>
+        <div class="card-body"><h3>Family Bundle</h3><p>4 Burgers + 4 Fries + 4 Drinks + 2 Desserts. Feed the whole family!</p><div class="card-footer"><span class="price">$44.99</span><button class="add-btn" onclick="addToCart('Family Bundle')">+ Add</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="special reveal">
+  <div>
+    <span class="deal-badge">🌶️ Today's Special Deal</span>
+    <h2>Spicy Friday Offer!</h2>
+    <p>Every Friday, get our famous Spicy Burger + Loaded Fries + a Drink for just $13.99. Available 5pm–9pm only!</p>
+    <a href="contact.html" class="btn btn-white">Order Now</a>
+  </div>
+  <div style="text-align:center; font-size:5rem;">🍔🌶️🍟</div>
+</div>
+
+<div class="toast" id="toast">✅ Added to order!</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand"><a href="index.html" class="logo">🍔 FoodStop</a><p>Serving the freshest, most delicious fast food since 2015.</p></div>
+    <div class="footer-col"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="menu.html">Menu</a></li><li><a href="faq.html">FAQ</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Opening Hours</h4><ul><li><a href="#">Mon–Fri: 9am–11pm</a></li><li><a href="#">Sat–Sun: 10am–12am</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+123456789">📞 +1 234 567 89</a></li><li><a href="mailto:hello@foodstop.com">✉️ hello@foodstop.com</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 FoodStop. All rights reserved.</p></div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); navLinks.classList.toggle('open'); });
+
+  function filterMenu(cat, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.cat-section').forEach(s => {
+      if (cat === 'all' || s.dataset.cat === cat) s.style.display = '';
+      else s.style.display = 'none';
+    });
+  }
+
+  function addToCart(item) {
+    const toast = document.getElementById('toast');
+    toast.textContent = `✅ ${item} added to order!`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
